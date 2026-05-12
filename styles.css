@@ -46,7 +46,9 @@ html {
     transition: all 0.3s ease-in-out;
 }
 .btn-neon:hover {
-    box-shadow: 0 0 10px var(--color-primary), 0 0 25px var(--color-primary-hover), 0 0 40px var(--color-primary);
+    background-color: white;
+    color: var(--color-primary);
+    box-shadow: 0 0 5px var(--color-primary), 0 0 15px var(--color-primary-hover);    
 }
 
 /* Filtro Activo (Categorías) */
