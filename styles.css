@@ -1,0 +1,99 @@
+/* ==========================================
+   VARIABLES CSS BASE
+========================================== */
+:root {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Efecto Hover en Tarjetas del Catálogo */
+.hover-zoom img {
+    transition: transform 0.5s ease;
+}
+.hover-zoom:hover img {
+    transform: scale(1.05);
+}
+
+/* ==========================================
+   ESTILOS DE BOTONES PRINCIPALES
+========================================== */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Efecto Neón para el botón "Ver Catálogo" del Hero */
+.btn-neon {
+    transition: all 0.3s ease-in-out;
+}
+.btn-neon:hover {
+    box-shadow: 0 0 10px var(--color-primary), 0 0 25px var(--color-primary-hover), 0 0 40px var(--color-primary);
+}
+
+/* Filtro Activo (Categorías) */
+.filter-active {
+    background-color: var(--color-text-main) !important;
+    color: var(--color-bg-light) !important;
+    border-color: var(--color-text-main) !important;
+}
+
+/* Animaciones Modales */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+}
+
+/* Ocultar Barra de Scroll en Carrusel y Modales */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Selector Talla/Color */
+.selector-btn {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-light);
+    color: var(--color-text-main);
+    transition: all 0.2s ease;
+}
+.selector-btn.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* IntersectionObserver Animación Scroll */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}

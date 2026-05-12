@@ -1,0 +1,568 @@
+{
+  "_comentarios_guia": {
+    "explicacion": "Este es el cerebro de datos de tu página. Puedes cambiar imágenes, textos y precios aquí sin tocar código HTML o JS.",
+    "seccion_config": "Cambia aquí tu número de WhatsApp y los colores HEX de tu paleta (claro/oscuro).",
+    "seccion_navbar": "Configura los enlaces del menú principal. (Están en el nuevo orden que pediste).",
+    "seccion_hero": "Textos e imagen principal que aparece al abrir la web.",
+    "secciones_informativas": "aboutSection, locationSection, scheduleSection contienen la información de los modales flotantes.",
+    "seccion_products": "Es tu base de datos de ropa. Para poner una prenda en el carrusel de novedades, cambia 'destacado' a true."
+  },
+  "config": {
+    "store": {
+      "whatsapp": "522414073434"
+    },
+    "theme": {
+      "light": {
+        "primary": "#ff477e",
+        "primaryHover": "#d93863",
+        "bgLight": "#ffffff",
+        "textMain": "#1f2937",
+        "textMuted": "#6b7280",
+        "cardBg": "#f3f4f6",
+        "border": "#e5e7eb"
+      },
+      "dark": {
+        "primary": "#ff477e",
+        "primaryHover": "#fb7185",
+        "bgLight": "#111827",
+        "textMain": "#f9fafb",
+        "textMuted": "#9ca3af",
+        "cardBg": "#1f2937",
+        "border": "#374151"
+      }
+    }
+  },
+  "navbar": {
+    "logo": {
+      "text": "Virgo",
+      "iconSrc": "https://api.iconify.design/mdi/zodiac-virgo.svg?color=%23ff477e"
+    },
+    "links": [
+      { "label": "Inicio", "href": "index.html" },
+      { "label": "¿Quiénes Somos?", "href": "javascript:openInfoModal('about')" },
+      { "label": "Ubicación", "href": "javascript:openInfoModal('location')" },
+      { "label": "Horario", "href": "javascript:openInfoModal('schedule')" },
+      { "label": "Catálogo", "href": "catalogo.html" },
+      { "label": "Novedades", "href": "index.html#carousel-container" }
+    ]
+  },
+  "hero": {
+    "titleNormal": "Refleja tu ",
+    "titleHighlight": "esencia real",
+    "description": "Descubre nuestra colección exclusiva para mujer. Piezas delicadas y cortes que celebran tu feminidad en cada detalle.",
+    "buttonText": "Ver Catálogo",
+    "buttonIcon": "→",
+    "imageSrc": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=80"
+  },
+  "aboutSection": {
+    "title": "Nuestra Esencia",
+    "content": "En Virgo creemos que la ropa es más que tela; es una extensión de tu personalidad. Nacimos con el propósito de ofrecer moda femenina que combina elegancia, comodidad y las últimas tendencias. Nos dedicamos a seleccionar piezas que te hagan sentir segura, poderosa y, sobre todo, tú misma en cualquier ocasión."
+  },
+  "locationSection": {
+    "title": "Nuestra Ubicación",
+    "address": "C. 2 de Abril 209, Centro, 90300 Cdad. de Apizaco, Tlax.",
+    "mapEmbedUrl": "https://www.google.com/maps?q=C.+2+de+Abril+209,+Centro,+90300+Cdad.+de+Apizaco,+Tlax.&output=embed"
+  },
+  "scheduleSection": {
+    "title": "Horarios de Atención",
+    "days": [
+      { "day": "Lunes a Viernes", "hours": "10:00 AM - 8:00 PM" },
+      { "day": "Sábados", "hours": "10:00 AM - 6:00 PM" },
+      { "day": "Domingos", "hours": "Cerrado" }
+    ],
+    "note": "Aceptamos todas las tarjetas de crédito y transferencias.",
+    "hoursLogic": {
+      "1": { "open": 0, "close": 24, "closed": false },
+      "2": { "open": 0, "close": 24, "closed": false },
+      "3": { "open": 0, "close": 24, "closed": false },
+      "4": { "open": 0, "close": 24, "closed": false },
+      "5": { "open": 0, "close": 24, "closed": false },
+      "6": { "open": 0, "close": 24, "closed": false },
+      "0": { "open": 0, "close": 24, "closed": false }
+    },
+    "closedModalData": {
+      "title": "¡Estamos descansando!",
+      "message": "Actualmente nos encontramos fuera de nuestro horario de atención. Te esperamos pronto para que descubras tu esencia real.",
+      "icon": "https://api.iconify.design/mdi/bed-empty.svg?color=%231f2937"
+    }
+  },
+  "categoriesSection": {
+    "title": "Categorías Destacadas",
+    "subtitle": "Explora nuestras líneas principales diseñadas para ti.",
+    "items": [
+      {
+        "id": 1,
+        "title": "Playeras",
+        "imageSrc": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        "id": 2,
+        "title": "Blusas",
+        "imageSrc": "https://images.unsplash.com/photo-1534126416832-a88fdf2911c2?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        "id": 3,
+        "title": "Suéteres",
+        "imageSrc": "https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        "id": 4,
+        "title": "Pantalones",
+        "imageSrc": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80"
+      }
+    ]
+  },
+  "productsSection": {
+    "title": "Catálogo Completo",
+    "subtitle": "Encuentra prendas diseñadas para resaltar tu belleza natural.",
+    "filters": [
+      "Todos",
+      "Playeras",
+      "Blusas",
+      "Suéteres",
+      "Pantalones"
+    ],
+    "items": [
+      {
+        "id": 1,
+        "nombre": "Playera Crop Top Básica",
+        "precio": 250,
+        "descripcion": "Corte alto ideal para jeans de tiro alto",
+        "tallas": ["XS", "S", "M", "L"],
+        "colores": ["Blanco", "Negro", "Beige"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": true
+      },
+      {
+        "id": 2,
+        "nombre": "Playera Estampado Floral",
+        "precio": 320,
+        "descripcion": "Diseño romántico con flores sutiles",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Rosa Claro", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 3,
+        "nombre": "Playera Cuello V Femenina",
+        "precio": 280,
+        "descripcion": "Corte entallado a la cintura",
+        "tallas": ["S", "M", "L", "XL"],
+        "colores": ["Negro", "Gris Jaspeado", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 4,
+        "nombre": "Playera Oversize Estilo Urbano",
+        "precio": 350,
+        "descripcion": "Holgada y cómoda para un look relajado",
+        "tallas": ["Unitalla"],
+        "colores": ["Gris Jaspeado", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 5,
+        "nombre": "Top Deportivo Seamless",
+        "precio": 299,
+        "descripcion": "Sin costuras para máxima comodidad al ejercitar",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Lila", "Negro", "Rosa Claro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": true
+      },
+      {
+        "id": 6,
+        "nombre": "Playera Manga 3/4",
+        "precio": 310,
+        "descripcion": "Ideal para climas de transición",
+        "tallas": ["M", "L", "XL"],
+        "colores": ["Mostaza", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 7,
+        "nombre": "Playera con Nudo Frontal",
+        "precio": 380,
+        "descripcion": "Detalle de nudo para un toque chic",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Rojo", "Blanco", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 8,
+        "nombre": "Playera Ribbed (Acanalada)",
+        "precio": 260,
+        "descripcion": "Textura acanalada que se adapta al cuerpo",
+        "tallas": ["XS", "S", "M"],
+        "colores": ["Beige", "Gris Jaspeado"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 9,
+        "nombre": "Musculosa de Algodón",
+        "precio": 220,
+        "descripcion": "Tirantes anchos, fresca y ligera",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Blanco", "Negro", "Beige"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1508427953056-b00b8d78ebf5?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 10,
+        "nombre": "Playera Cuello de Barco",
+        "precio": 450,
+        "descripcion": "Corte elegante que resalta los hombros",
+        "tallas": ["S", "M"],
+        "colores": ["Azul Marino", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1520975954732-57dd22299614?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Playeras",
+        "destacado": false
+      },
+      {
+        "id": 11,
+        "nombre": "Blusa de Seda Cruzada",
+        "precio": 550,
+        "descripcion": "Corte envolvente que estiliza la figura",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Perla", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1534126416832-a88fdf2911c2?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": true
+      },
+      {
+        "id": 12,
+        "nombre": "Blusa Campesina Hombros Caídos",
+        "precio": 420,
+        "descripcion": "Detalle de encaje y hombros descubiertos",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Blanco", "Arena"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 13,
+        "nombre": "Blusa de Lino Botones Frente",
+        "precio": 600,
+        "descripcion": "Fresca, ideal para looks de oficina en verano",
+        "tallas": ["M", "L", "XL"],
+        "colores": ["Arena", "Blanco", "Azul Marino"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1564257631407-4deec30acb26?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 14,
+        "nombre": "Blusa Chiffon Transparente",
+        "precio": 480,
+        "descripcion": "Tela vaporosa, incluye top de tirantes interno",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 15,
+        "nombre": "Blusa Cuello Halter Elegante",
+        "precio": 390,
+        "descripcion": "Ajuste en la nuca, perfecta para la noche",
+        "tallas": ["S", "M"],
+        "colores": ["Rojo Vino", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": true
+      },
+      {
+        "id": 16,
+        "nombre": "Blusa Peplum Estampada",
+        "precio": 450,
+        "descripcion": "Volante en la cintura para definir silueta",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Multicolor"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1588117260148-b47818741c74?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 17,
+        "nombre": "Blusa Satinada con Lazo",
+        "precio": 520,
+        "descripcion": "Moño elegante en el cuello, acabado brillante",
+        "tallas": ["M", "L"],
+        "colores": ["Azul Esmeralda", "Perla", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1574621100236-d25b64dfadbc?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 18,
+        "nombre": "Blusa Asimétrica de Fiesta",
+        "precio": 460,
+        "descripcion": "Un solo hombro, diseño contemporáneo",
+        "tallas": ["S", "M"],
+        "colores": ["Plata", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1550614000-4b95dd2cbcf0?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 19,
+        "nombre": "Blusón Ligero de Playa",
+        "precio": 290,
+        "descripcion": "Corte amplio y tela fresca de caída libre",
+        "tallas": ["Unitalla"],
+        "colores": ["Coral", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1502716115624-b565e498caa5?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 20,
+        "nombre": "Blusa Mangas Abullonadas",
+        "precio": 580,
+        "descripcion": "Estilo romántico con volumen en hombros",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Lila Suave", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1604928141064-207cea6f5722?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Blusas",
+        "destacado": false
+      },
+      {
+        "id": 21,
+        "nombre": "Suéter Tejido Grueso Dama",
+        "precio": 850,
+        "descripcion": "Tejido de punto grueso ideal para invierno",
+        "tallas": ["M", "L", "XL"],
+        "colores": ["Crema", "Gris Jaspeado"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": true
+      },
+      {
+        "id": 22,
+        "nombre": "Suéter Cuello de Tortuga",
+        "precio": 780,
+        "descripcion": "Ajuste ceñido que resalta la figura",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Beige", "Rojo Vino"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 23,
+        "nombre": "Cárdigan Largo Femenino",
+        "precio": 920,
+        "descripcion": "Abierto, por debajo de la rodilla",
+        "tallas": ["Unitalla"],
+        "colores": ["Gris Jaspeado", "Negro", "Arena"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1559551408-df32ce0745eb?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 24,
+        "nombre": "Suéter Fino de Cashmere",
+        "precio": 1500,
+        "descripcion": "Lana premium ultrasuave y ligera",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Camel", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1624451996501-1b15ffdf6ee5?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 25,
+        "nombre": "Suéter Oversize de Punto",
+        "precio": 800,
+        "descripcion": "Corte extra grande para un look acogedor",
+        "tallas": ["Unitalla"],
+        "colores": ["Mostaza", "Crema"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1434389678369-182cb801265b?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": true
+      },
+      {
+        "id": 26,
+        "nombre": "Suéter Escote en V Profundo",
+        "precio": 650,
+        "descripcion": "Ideal para combinar con collares delicados",
+        "tallas": ["S", "M"],
+        "colores": ["Rosa Empolvado", "Blanco Roto"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 27,
+        "nombre": "Suéter Cropped",
+        "precio": 590,
+        "descripcion": "Corto a la cintura, perfecto con mom jeans",
+        "tallas": ["XS", "S", "M"],
+        "colores": ["Azul Pastel", "Blanco"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 28,
+        "nombre": "Suéter Manga Murciélago",
+        "precio": 820,
+        "descripcion": "Mangas holgadas y cintura ajustada",
+        "tallas": ["M", "L"],
+        "colores": ["Verde Olivo", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1608063615781-e2ef8c73d114?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 29,
+        "nombre": "Suéter Trenzado Clásico",
+        "precio": 890,
+        "descripcion": "Patrón de trenzas al frente",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Rojo Cereza", "Crema", "Azul Marino"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 30,
+        "nombre": "Suéter Calado Ligero",
+        "precio": 550,
+        "descripcion": "Tejido abierto, ligeramente transparente",
+        "tallas": ["S", "M"],
+        "colores": ["Blanco Roto", "Arena"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1574291814206-363acdf2aa79?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Suéteres",
+        "destacado": false
+      },
+      {
+        "id": 31,
+        "nombre": "Jeans Skinny Tiro Alto",
+        "precio": 650,
+        "descripcion": "Mezclilla stretch que moldea la figura",
+        "tallas": ["5", "7", "9", "11"],
+        "colores": ["Azul Claro", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": true
+      },
+      {
+        "id": 32,
+        "nombre": "Pantalón Culotte Dama",
+        "precio": 750,
+        "descripcion": "Pierna ancha y largo a la pantorrilla",
+        "tallas": ["5", "7", "9"],
+        "colores": ["Beige", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1517438476312-10d79c077509?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 33,
+        "nombre": "Pantalón de Vestir Pinzas",
+        "precio": 890,
+        "descripcion": "Corte sastre elegante para oficina",
+        "tallas": ["3", "5", "7", "9"],
+        "colores": ["Negro", "Gris Jaspeado", "Azul Marino"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 34,
+        "nombre": "Mom Jeans Clásicos",
+        "precio": 680,
+        "descripcion": "Tiro alto y corte relajado en piernas",
+        "tallas": ["5", "7", "9", "11"],
+        "colores": ["Azul Vintage", "Azul Claro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1582552938357-32b906df40cb?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 35,
+        "nombre": "Pantalón Cargo Femenino",
+        "precio": 550,
+        "descripcion": "Confort con bolsillos laterales estilo urbano",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Verde Militar", "Beige", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": true
+      },
+      {
+        "id": 36,
+        "nombre": "Pantalón Palazzo Estampado",
+        "precio": 790,
+        "descripcion": "Corte fluido, tela ligera de verano",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Floral Marino", "Multicolor"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1485218126466-34e6392ec754?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 37,
+        "nombre": "Jeans Boyfriend Rotos",
+        "precio": 720,
+        "descripcion": "Ajuste suelto con detalles desgastados",
+        "tallas": ["7", "9", "11"],
+        "colores": ["Azul Deslavado", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 38,
+        "nombre": "Leggings Efecto Cuero",
+        "precio": 950,
+        "descripcion": "Ajustados y audaces, interior afelpado",
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro Brillante"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1551854838-212c50b4c6e9?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 39,
+        "nombre": "Pantalón Recto de Lino",
+        "precio": 620,
+        "descripcion": "Básico y fresco para la temporada",
+        "tallas": ["7", "9", "11"],
+        "colores": ["Blanco", "Arena"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1594633313593-cb40afaf0c28?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      },
+      {
+        "id": 40,
+        "nombre": "Jeans Acampanados (Flare)",
+        "precio": 710,
+        "descripcion": "Estilo retro ajustado arriba y suelto al tobillo",
+        "tallas": ["5", "7", "9"],
+        "colores": ["Azul Oscuro", "Negro"],
+        "referencia_imagen": "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?auto=format&fit=crop&w=600&q=80",
+        "categoria": "Pantalones",
+        "destacado": false
+      }
+    ]
+  }
+}

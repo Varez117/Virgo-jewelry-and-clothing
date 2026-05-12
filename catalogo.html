@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Virgo</title>
+    
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--color-primary)',
+                        primaryHover: 'var(--color-primary-hover)',
+                        bgLight: 'var(--color-bg-light)',
+                        textMain: 'var(--color-text-main)',
+                        textMuted: 'var(--color-text-muted)',
+                        cardBg: 'var(--color-card-bg)',
+                        borderColor: 'var(--color-border)',
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bgLight text-textMain font-sans antialiased transition-colors duration-300">
+
+    <header id="navbar-container" class="sticky top-0 z-50 bg-bgLight transition-all duration-300"></header>
+    
+    <main id="main-content">
+        <section id="products-container" class="container mx-auto px-6 py-12 reveal"></section>
+    </main>
+
+    <footer class="border-t border-borderColor py-8 text-center text-textMuted text-sm transition-colors duration-300 mt-12">
+        <p>© 2026 Virgo. Todos los derechos reservados.</p>
+    </footer>
+
+    <div id="cart-container"></div>
+    <div id="product-modal-container"></div>
+    <div id="info-modal-container"></div>
+
+    <button id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50 hover:bg-primaryHover hover:-translate-y-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
+    </button>
+
+    <script src="app.js"></script>
+</body>
+</html>
