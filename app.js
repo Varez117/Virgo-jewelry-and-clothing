@@ -624,6 +624,7 @@ function renderCarousel() {
 
   // Inyecta todo al contenedor.
   // OJO AQUÍ: Pegamos el 'cardsHTML' cuatro veces seguidas para engañar al usuario y crear el efecto "infinito".
+  // Y aquí cambiamos overflow-x-hidden por overflow-x-auto, y touch-pan-x por touch-pan-y
   container.innerHTML = `
         <div class="mb-10 flex flex-col items-center relative text-center">
             <div>
@@ -637,8 +638,7 @@ function renderCarousel() {
             </div>
         </div>
         
-        // Busca esta línea dentro de renderCarousel():
-         <div id="slider-track" class="flex gap-6 overflow-x-auto pb-8 w-full touch-pan-y">
+        <div id="slider-track" class="flex gap-6 overflow-x-auto pb-8 w-full touch-pan-y">
             ${cardsHTML}${cardsHTML}${cardsHTML}${cardsHTML}
         </div>
     `;
@@ -832,6 +832,12 @@ function renderProductGrid() {
   if (visibleItems < filteredProducts.length)
     loadMoreContainer.classList.remove("hidden");
   else loadMoreContainer.classList.add("hidden"); // Si ya mostró todo, oculta el botón
+
+  // Fuerza la aparición sin esperar al scroll
+  const container = document.getElementById("products-container");
+  if (container) {
+      container.classList.add("active");
+  }
 }
 
 // ==========================================
