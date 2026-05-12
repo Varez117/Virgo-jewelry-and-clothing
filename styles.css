@@ -99,3 +99,14 @@ html {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Soporte Táctil para el Carrusel */
+#slider-track {
+    -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+    overscroll-behavior-x: contain;   /* Evita que el scroll horizontal afecte al resto de la página */
+}
+
+.carousel-item {
+    user-select: none;
+    -webkit-user-drag: none; /* Evita que el navegador intente "arrastrar" la imagen en vez de hacer scroll */
+}
