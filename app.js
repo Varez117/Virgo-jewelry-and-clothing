@@ -637,7 +637,8 @@ function renderCarousel() {
             </div>
         </div>
         
-        <div id="slider-track" class="flex gap-6 overflow-x-hidden pb-8 w-full touch-pan-x">
+        // Busca esta línea dentro de renderCarousel():
+         <div id="slider-track" class="flex gap-6 overflow-x-auto pb-8 w-full touch-pan-y">
             ${cardsHTML}${cardsHTML}${cardsHTML}${cardsHTML}
         </div>
     `;
