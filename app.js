@@ -634,7 +634,7 @@ function renderCarousel() {
             
             <div class="flex gap-4 justify-center w-full mt-6">
                 <button onclick="moveCarousel(-1)" class="w-12 h-12 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight">◀</button>
-                <button onclick="moveCarousel(1)" class="w-12 h-12 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight">➜</button>
+                <button onclick="moveCarousel(1)" class="w-12 h-12 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight">▶</button>
             </div>
         </div>
         
