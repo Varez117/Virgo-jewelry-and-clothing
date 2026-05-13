@@ -8,7 +8,7 @@
 // ==========================================
 // 1. VARIABLES DE ESTADO GLOBAL
 // ==========================================
-let currentTheme = "light";
+let currentTheme = localStorage.getItem("virgoTheme") || "light";
 let globalData = null;
 
 // ==========================================
@@ -827,6 +827,7 @@ function applyThemeVariables(themeType) {
 
 function toggleTheme() {
   currentTheme = currentTheme === "light" ? "dark" : "light";
+  localStorage.setItem("virgoTheme", currentTheme); // Guarda el estado en la memoria del navegador
   applyThemeVariables(currentTheme);
   renderNavbar(globalData.navbar);
 
@@ -867,6 +868,52 @@ function renderHero(data) {
                     <img src="${data.imageSrc}" alt="Colección" class="w-full h-[400px] md:h-[500px] object-cover rounded-2xl shadow-2xl">
                 </div>
             </div>
+        </div>
+    `;
+}
+
+function renderCategories(data) {
+  const container = document.getElementById("categories-container");
+  if (!container) return;
+
+  const orderMap = { Pantalones: 1, Playeras: 2, Blusas: 3, Suéteres: 4 };
+  const classMap = {
+    Pantalones: "md:col-span-2",
+    Playeras: "md:col-span-1",
+    Blusas: "md:col-span-1",
+    Suéteres: "md:col-span-2",
+  };
+
+  const sortedItems = [...data.items].sort(
+    (a, b) => orderMap[a.title] - orderMap[b.title],
+  );
+
+  const itemsHTML = sortedItems
+    .map((item) => {
+      const count = allProducts.filter(
+        (p) => p.categoria === item.title,
+      ).length;
+      const gridClass = classMap[item.title] || "md:col-span-1";
+      return `
+            <a href="catalogo.html?category=${encodeURIComponent(item.title)}" class="${gridClass} relative h-64 md:h-80 rounded-2xl overflow-hidden hover-zoom cursor-pointer shadow-md border border-borderColor block transition-all duration-300 btn-press">
+                <img src="${item.imageSrc}" alt="${item.title}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/10 transition-opacity"></div>
+                <div class="absolute bottom-6 left-6 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-300">
+                    <span class="text-black dark:text-white font-bold text-xl leading-tight mb-0.5">${item.title}</span>
+                    <span class="text-primary font-bold text-sm">${count} prendas</span>
+                </div>
+            </a>
+        `;
+    })
+    .join("");
+
+  container.innerHTML = `
+        <div class="text-center mb-12 pt-8">
+            <h2 class="text-4xl font-serif text-textMain mb-4">${data.title}</h2>
+            <p class="text-textMuted max-w-2xl mx-auto">${data.subtitle}</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            ${itemsHTML}
         </div>
     `;
 }
