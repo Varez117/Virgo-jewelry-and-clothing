@@ -298,24 +298,24 @@ function renderNavbar(data) {
   container.innerHTML = `
         <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 relative">
             <div class="flex justify-between items-center w-full relative z-50 bg-bgLight">
-                <a href="index.html" class="flex items-center gap-2 btn-press">
-                    <img src="${data.logo.iconSrc}" alt="Icono" class="w-8 h-8 md:w-10 md:h-10">
-                    <span class="text-2xl md:text-4xl font-serif font-bold text-primary italic">${data.logo.text}</span>
+                <a href="index.html" class="flex items-center gap-1.5 md:gap-2 btn-press min-w-0">
+                    <img src="${data.logo.iconSrc}" alt="Icono" class="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 flex-shrink-0">
+                    <span class="text-xl sm:text-2xl md:text-4xl font-serif font-bold text-primary italic truncate">${data.logo.text}</span>
                 </a>
                 
                 <nav class="hidden md:flex gap-6 items-center">${linksHTML}</nav>
                 
-                <div class="flex items-center gap-1 md:gap-3 text-textMain">
-                    <button onclick="toggleTheme()" class="p-2 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
+                <div class="flex items-center gap-0.5 md:gap-3 text-textMain shrink-0">
+                    <button onclick="toggleTheme()" class="p-1.5 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
                         ${themeIcon}
                     </button>
-                    <button onclick="toggleCart()" class="relative p-2 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
+                    <button onclick="toggleCart()" class="relative p-1.5 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
                         ${iconsSVG.cart}
                         ${totalItems > 0 ? `<span class="absolute -top-1 -right-1 md:-top-1 md:-right-1 bg-primary text-white text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full">${totalItems}</span>` : ""}
                     </button>
                     
-                    <button onclick="toggleMobileMenu()" class="md:hidden flex items-center gap-1 text-xs md:text-sm font-medium text-textMuted hover:text-primary border border-borderColor px-3 py-1.5 md:px-4 md:py-2 rounded-full btn-press ml-1">
-                        Menú <span class="text-[10px] md:text-xs">▼</span>
+                    <button onclick="toggleMobileMenu()" class="md:hidden flex items-center gap-1 text-[11px] md:text-sm font-medium text-textMuted hover:text-primary border border-borderColor px-2.5 py-1 md:px-4 md:py-2 rounded-full btn-press ml-1">
+                        Menú <span class="text-[9px] md:text-xs">▼</span>
                     </button>
                 </div>
             </div>
@@ -414,7 +414,8 @@ window.moveCarousel = function (direction) {
   const card = track.querySelector(".carousel-item");
   if (!card) return;
 
-  const step = card.offsetWidth + 24;
+  // 24px es el equivalente exacto a la clase 'gap-6' de Tailwind
+  const step = card.offsetWidth + 24; 
   const start = track.scrollLeft;
   const end = start + step * direction;
   const duration = 600;
@@ -423,6 +424,7 @@ window.moveCarousel = function (direction) {
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
+    // Efecto de suavizado (ease-out)
     const ease = 1 - Math.pow(1 - progress, 4);
 
     track.scrollLeft = start + (end - start) * ease;
@@ -430,6 +432,7 @@ window.moveCarousel = function (direction) {
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
+      // Bucle infinito: si llegamos al borde, reiniciamos sigilosamente
       const totalOriginal = allProducts.filter((p) => p.destacado).length;
       if (track.scrollLeft < step * 0.5) {
         track.scrollLeft += step * totalOriginal;
@@ -451,10 +454,11 @@ function renderCarousel() {
     return;
   }
 
+  // IMPORTANTE: min-w-full y shrink-0 fuerzan la tarjeta al 100% exacto en móviles.
   const cardsHTML = destacados
     .map(
       (item) => `
-        <div onclick="openProductModal(${item.id})" class="carousel-item flex-none w-[82vw] md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+        <div onclick="openProductModal(${item.id})" class="carousel-item shrink-0 min-w-full w-full md:min-w-0 md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
             <div class="relative h-80 overflow-hidden bg-cardBg">
                 <img src="${item.referencia_imagen}" alt="${item.nombre}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm flex items-center gap-1">
@@ -493,19 +497,23 @@ function renderCarousel() {
         </div>
     `;
 
+  // Aumentamos el delay a 300ms para asegurar que las imágenes y CSS carguen
+  // y nos den el ancho real de la tarjeta antes de intentar centrarla.
   setTimeout(() => {
     const track = document.getElementById("slider-track");
     if (!track) return;
     const card = track.querySelector(".carousel-item");
-    const step = card.offsetWidth + 24;
+    const step = card.offsetWidth + 24; // 24px corresponde a gap-6
     const totalOriginal = destacados.length;
+    
+    // Posiciona el carrusel ocultando las tarjetas clonadas del inicio
     track.scrollLeft = step * totalOriginal;
 
     if (carouselInterval) clearInterval(carouselInterval);
     carouselInterval = setInterval(() => {
       moveCarousel(1);
     }, 3000);
-  }, 50);
+  }, 400);
 }
 
 // ==========================================
