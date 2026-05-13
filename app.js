@@ -35,9 +35,9 @@ let carouselInterval = null; // Variable para el auto-rotado del carrusel
 // 4. ICONOS SVG (Rendimiento Seguro)
 // ==========================================
 const iconsSVG = {
-  sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`,
-  moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`,
-  cart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
+  sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5 md:w-7 md:h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`,
+  moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5 md:w-7 md:h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>`,
+  cart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5 md:w-7 md:h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>`,
   trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>`,
   emptyCart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-16 h-16 mb-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0zM12 9L15 6M15 6L18 9M15 6V14" /></svg>`,
 };
@@ -104,11 +104,30 @@ function initScrollFeatures() {
 
   reveals.forEach((reveal) => observer.observe(reveal));
 
+  let lastScrollY = window.scrollY;
+
   window.addEventListener("scroll", () => {
     const navbar = document.getElementById("navbar-container");
     const backToTop = document.getElementById("btn-back-to-top");
+    const currentScrollY = window.scrollY;
 
-    if (window.scrollY > 10) {
+    // Lógica inteligente para ocultar/mostrar la barra de navegación en móviles
+    if (window.innerWidth <= 768) {
+        if (currentScrollY > lastScrollY && currentScrollY > 60) {
+            // Scroll hacia abajo: ocultamos la barra
+            navbar.style.transform = "translateY(-100%)";
+        } else {
+            // Scroll hacia arriba: mostramos la barra
+            navbar.style.transform = "translateY(0)";
+        }
+    } else {
+        // En pantallas grandes nos aseguramos que siempre esté visible
+        navbar.style.transform = "translateY(0)";
+    }
+    
+    lastScrollY = currentScrollY;
+
+    if (currentScrollY > 10) {
       if (navbar) navbar.classList.add("shadow-md");
       if (backToTop) {
         backToTop.classList.remove("opacity-0", "pointer-events-none");
@@ -268,40 +287,43 @@ function renderNavbar(data) {
   const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
   const themeIcon = currentTheme === "light" ? iconsSVG.moon : iconsSVG.sun;
 
+  // Ajustes de padding y bordes para que los enlaces se vean bien en modo flotante móvil
   const linksHTML = data.links
     .map(
       (link) =>
-        `<a href="${link.href}" onclick="handleNavClick()" class="block md:inline-block py-2 text-textMuted hover:text-primary transition-colors text-lg md:text-lg font-medium btn-press">${link.label}</a>`,
+        `<a href="${link.href}" onclick="handleNavClick()" class="block py-4 px-6 border-b border-borderColor last:border-none md:border-none md:inline-block md:py-2 md:px-0 text-textMuted hover:text-primary hover:bg-cardBg md:hover:bg-transparent transition-colors text-lg md:text-lg font-medium btn-press">${link.label}</a>`,
     )
     .join("");
 
   container.innerHTML = `
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center w-full">
+        <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 relative">
+            <div class="flex justify-between items-center w-full relative z-50 bg-bgLight">
                 <a href="index.html" class="flex items-center gap-2 btn-press">
                     <img src="${data.logo.iconSrc}" alt="Icono" class="w-8 h-8 md:w-10 md:h-10">
-                    <span class="text-3xl md:text-4xl font-serif font-bold text-primary italic">${data.logo.text}</span>
+                    <span class="text-2xl md:text-4xl font-serif font-bold text-primary italic">${data.logo.text}</span>
                 </a>
                 
                 <nav class="hidden md:flex gap-6 items-center">${linksHTML}</nav>
                 
-                <div class="flex items-center gap-3 text-textMain">
-                    <button onclick="toggleTheme()" class="p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
+                <div class="flex items-center gap-1 md:gap-3 text-textMain">
+                    <button onclick="toggleTheme()" class="p-2 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
                         ${themeIcon}
                     </button>
-                    <button onclick="toggleCart()" class="relative p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
+                    <button onclick="toggleCart()" class="relative p-2 md:p-3 rounded-full hover:bg-cardBg transition-colors border border-transparent text-textMain flex items-center justify-center btn-press">
                         ${iconsSVG.cart}
-                        ${totalItems > 0 ? `<span class="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">${totalItems}</span>` : ""}
+                        ${totalItems > 0 ? `<span class="absolute -top-1 -right-1 md:-top-1 md:-right-1 bg-primary text-white text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full">${totalItems}</span>` : ""}
                     </button>
                     
-                    <button onclick="toggleMobileMenu()" class="md:hidden flex items-center gap-1 text-sm font-medium text-textMuted hover:text-primary border border-borderColor px-4 py-2 rounded-full btn-press">
-                        Menú <span class="text-xs">▼</span>
+                    <button onclick="toggleMobileMenu()" class="md:hidden flex items-center gap-1 text-xs md:text-sm font-medium text-textMuted hover:text-primary border border-borderColor px-3 py-1.5 md:px-4 md:py-2 rounded-full btn-press ml-1">
+                        Menú <span class="text-[10px] md:text-xs">▼</span>
                     </button>
                 </div>
             </div>
             
-            <div class="${isMobileMenuOpen ? "block" : "hidden"} md:hidden pt-4 pb-2 border-t border-borderColor mt-4 animate-fade-in">
-                ${linksHTML}
+            <div class="${isMobileMenuOpen ? "block" : "hidden"} md:hidden absolute top-full left-0 w-full bg-bgLight shadow-2xl border-t border-borderColor transition-all duration-300 z-[90] animate-fade-in origin-top">
+                <div class="flex flex-col w-full">
+                    ${linksHTML}
+                </div>
             </div>
         </div>
     `;
