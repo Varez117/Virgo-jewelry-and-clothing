@@ -33,7 +33,6 @@ let carouselInterval = null; // Variable para el auto-rotado del carrusel
 
 // ==========================================
 // 4. ICONOS SVG (Rendimiento Seguro)
-// Tamaños ajustados a w-7 h-7 para hacerlos más grandes.
 // ==========================================
 const iconsSVG = {
   sun: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-7 h-7"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>`,
@@ -222,7 +221,6 @@ function openInfoModal(type) {
     contentHTML = `<h2 class="text-3xl font-serif text-textMain mb-6 flex items-center gap-2"><span class="text-primary text-2xl">🕒</span> ${data.title}</h2><div class="flex flex-col">${daysHTML}</div><div class="mt-8 p-4 bg-bgLight rounded-2xl border border-borderColor text-center"><p class="text-sm text-primary font-bold italic">${data.note}</p></div>`;
   }
 
-  // Modificado: El botón de cerrar ahora tiene bg-primary text-white y btn-press
   container.innerHTML = `
         <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeInfoModal()"></div>
@@ -270,7 +268,6 @@ function renderNavbar(data) {
   const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
   const themeIcon = currentTheme === "light" ? iconsSVG.moon : iconsSVG.sun;
 
-  // Modificado: Enlaces más grandes (text-lg md:text-lg) y animación btn-press
   const linksHTML = data.links
     .map(
       (link) =>
@@ -278,7 +275,6 @@ function renderNavbar(data) {
     )
     .join("");
 
-  // Modificado: Botones más grandes (p-3) y animación btn-press
   container.innerHTML = `
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center w-full">
@@ -483,7 +479,6 @@ function renderCarousel() {
     const totalOriginal = destacados.length;
     track.scrollLeft = step * totalOriginal;
 
-    // Modificado: Auto-rotación del carrusel cada 3 segundos
     if (carouselInterval) clearInterval(carouselInterval);
     carouselInterval = setInterval(() => {
       moveCarousel(1);
@@ -538,10 +533,11 @@ function renderProductsSection(data) {
 
   const filtersHTML = data.filters
     .map((filter) => {
+      // Cambio aplicado aquí: bg-white dark:bg-gray-800 en lugar de bg-cardBg para botones inactivos
       const isActive =
         filter === currentCategory
           ? "filter-active"
-          : "bg-cardBg text-textMuted border border-borderColor hover:border-primary";
+          : "bg-white dark:bg-gray-800 text-textMuted border border-borderColor hover:border-primary";
       return `<button onclick="updateCatalogState('filter', '${filter}')" class="px-6 py-2 rounded-full text-sm font-medium transition-colors shadow-sm btn-press ${isActive}">${filter}</button>`;
     })
     .join("");
@@ -551,13 +547,13 @@ function renderProductsSection(data) {
             <h2 class="text-4xl font-serif text-textMain mb-4">${data.title}</h2>
             <p class="text-textMuted max-w-2xl mx-auto mb-8">${data.subtitle}</p>
             <div class="max-w-md mx-auto mb-8 relative">
-                <input type="text" placeholder="Buscar por nombre o detalle..." class="w-full bg-cardBg border border-borderColor text-textMain px-5 py-3 rounded-full outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" onkeyup="updateCatalogState('search', this.value)">
+                <input type="text" placeholder="Buscar por nombre o detalle..." class="w-full bg-white dark:bg-gray-800 border border-borderColor text-textMain px-5 py-3 rounded-full outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all shadow-sm" onkeyup="updateCatalogState('search', this.value)">
                 <span class="absolute right-4 top-3 text-textMuted text-xl">⌕</span>
             </div>
             <div class="flex flex-wrap justify-center gap-3 mb-8" id="catalog-filters">${filtersHTML}</div>
             <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-textMuted mb-6 px-2 gap-4">
                 <span id="catalog-count">Cargando...</span>
-                <select class="border border-borderColor bg-cardBg text-textMain px-4 py-2 rounded-lg font-medium cursor-pointer outline-none shadow-sm" onchange="updateCatalogState('sort', this.value)">
+                <select class="border border-borderColor bg-white dark:bg-gray-800 text-textMain px-4 py-2 rounded-lg font-medium cursor-pointer outline-none shadow-sm" onchange="updateCatalogState('sort', this.value)">
                     <option value="Recomendados">Recomendados</option>
                     <option value="Menor Precio">Menor Precio</option>
                     <option value="Mayor Precio">Mayor Precio</option>
@@ -581,12 +577,13 @@ function renderProductGrid() {
   if (filtersContainer) {
     const buttons = filtersContainer.querySelectorAll("button");
     buttons.forEach((btn) => {
+      // Cambio aplicado aquí: bg-white dark:bg-gray-800 al deseleccionar botones dinámicamente
       if (btn.innerText === currentCategory)
         btn.className =
           "px-6 py-2 rounded-full text-sm font-medium transition-colors shadow-sm filter-active btn-press";
       else
         btn.className =
-          "px-6 py-2 rounded-full text-sm font-medium transition-colors bg-cardBg text-textMuted border border-borderColor hover:border-primary shadow-sm btn-press";
+          "px-6 py-2 rounded-full text-sm font-medium transition-colors bg-white dark:bg-gray-800 text-textMuted border border-borderColor hover:border-primary shadow-sm btn-press";
     });
   }
 
@@ -660,7 +657,6 @@ function openProductModal(id) {
   const container = document.getElementById("product-modal-container");
   document.body.style.overflow = "hidden";
 
-  // Modificado: El botón de cerrar ahora tiene bg-primary text-white y btn-press
   container.innerHTML = `
         <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
