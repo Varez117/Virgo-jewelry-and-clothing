@@ -240,6 +240,7 @@ function openInfoModal(type) {
     contentHTML = `<h2 class="text-3xl font-serif text-textMain mb-6 flex items-center gap-2"><span class="text-primary text-2xl">🕒</span> ${data.title}</h2><div class="flex flex-col">${daysHTML}</div><div class="mt-8 p-4 bg-bgLight rounded-2xl border border-borderColor text-center"><p class="text-sm text-primary font-bold italic">${data.note}</p></div>`;
   }
 
+  // Se modificaron las clases del botón "Cerrar Ventana" en la parte inferior de este template
   container.innerHTML = `
         <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeInfoModal()"></div>
@@ -247,7 +248,7 @@ function openInfoModal(type) {
                 <button onclick="closeInfoModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-md hover:bg-primaryHover text-xl btn-press">×</button>
                 ${contentHTML}
                 <div class="mt-10 pt-6 border-t border-borderColor flex justify-center md:justify-end">
-                    <button onclick="closeInfoModal()" class="px-6 py-2 rounded-full border border-borderColor text-textMuted hover:text-textMain hover:bg-borderColor transition-colors w-full md:w-auto font-medium btn-press">Cerrar Ventana</button>
+                    <button onclick="closeInfoModal()" class="px-6 py-2 rounded-full bg-primary text-white hover:bg-primaryHover shadow-md transition-colors w-full md:w-auto font-medium btn-press">Cerrar Ventana</button>
                 </div>
             </div>
         </div>
@@ -454,11 +455,12 @@ function renderCarousel() {
     return;
   }
 
-  // IMPORTANTE: min-w-full y shrink-0 fuerzan la tarjeta al 100% exacto en móviles.
+  // Se agregaron las clases lg:w-[calc(33.333%-16px)] (3 tarjetas) y xl:w-[calc(25%-18px)] (4 tarjetas)
+  // Esto hace que la transición al encoger la ventana sea fluida y calcule matemáticamente los espacios.
   const cardsHTML = destacados
     .map(
       (item) => `
-        <div onclick="openProductModal(${item.id})" class="carousel-item shrink-0 min-w-full w-full md:min-w-0 md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+        <div onclick="openProductModal(${item.id})" class="carousel-item shrink-0 min-w-full w-full md:min-w-0 md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
             <div class="relative h-80 overflow-hidden bg-cardBg">
                 <img src="${item.referencia_imagen}" alt="${item.nombre}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm flex items-center gap-1">
@@ -497,13 +499,11 @@ function renderCarousel() {
         </div>
     `;
 
-  // Aumentamos el delay a 300ms para asegurar que las imágenes y CSS carguen
-  // y nos den el ancho real de la tarjeta antes de intentar centrarla.
   setTimeout(() => {
     const track = document.getElementById("slider-track");
     if (!track) return;
     const card = track.querySelector(".carousel-item");
-    const step = card.offsetWidth + 24; // 24px corresponde a gap-6
+    const step = card.offsetWidth + 24; 
     const totalOriginal = destacados.length;
     
     // Posiciona el carrusel ocultando las tarjetas clonadas del inicio
@@ -513,9 +513,22 @@ function renderCarousel() {
     carouselInterval = setInterval(() => {
       moveCarousel(1);
     }, 3000);
-  }, 400);
-}
 
+    // NUEVO CÓDIGO: Evento que recalcula y reacomoda al redimensionar la ventana
+    window.addEventListener('resize', () => {
+        const currentCard = track.querySelector(".carousel-item");
+        if (!currentCard) return;
+        
+        // Recalculamos el ancho nuevo de la tarjeta
+        const newStep = currentCard.offsetWidth + 24;
+        
+        // Matemáticas para encontrar qué tarjeta se estaba viendo y forzar el scroll a esa posición exacta
+        const closestCardIndex = Math.round(track.scrollLeft / newStep);
+        track.scrollLeft = closestCardIndex * newStep;
+    });
+
+  }, 300);
+}
 // ==========================================
 // 11. SISTEMA DEL CATÁLOGO COMPLETO
 // ==========================================
