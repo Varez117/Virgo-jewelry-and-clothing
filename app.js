@@ -529,6 +529,7 @@ function renderCarousel() {
 
   }, 300);
 }
+
 // ==========================================
 // 11. SISTEMA DEL CATÁLOGO COMPLETO
 // ==========================================
@@ -576,7 +577,6 @@ function renderProductsSection(data) {
 
   const filtersHTML = data.filters
     .map((filter) => {
-      // Cambio aplicado aquí: bg-white dark:bg-gray-800 en lugar de bg-cardBg para botones inactivos
       const isActive =
         filter === currentCategory
           ? "filter-active"
@@ -605,7 +605,7 @@ function renderProductsSection(data) {
         </div>
         <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         <div id="load-more-container" class="text-center mt-12 hidden">
-            <button onclick="loadMoreItems()" class="bg-cardBg border border-borderColor text-textMain font-medium px-8 py-3 rounded-full hover:border-primary transition-colors shadow-sm btn-press">Ver Más Prendas ▾</button>
+            <button onclick="loadMoreItems()" class="btn-primary shadow-md btn-press">Ver Más Prendas ▾</button>
         </div>
     `;
   renderProductGrid();
@@ -620,7 +620,6 @@ function renderProductGrid() {
   if (filtersContainer) {
     const buttons = filtersContainer.querySelectorAll("button");
     buttons.forEach((btn) => {
-      // Cambio aplicado aquí: bg-white dark:bg-gray-800 al deseleccionar botones dinámicamente
       if (btn.innerText === currentCategory)
         btn.className =
           "px-6 py-2 rounded-full text-sm font-medium transition-colors shadow-sm filter-active btn-press";
