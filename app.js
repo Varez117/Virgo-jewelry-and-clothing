@@ -29,7 +29,7 @@ let isMobileMenuOpen = false;
 let cart = JSON.parse(localStorage.getItem("virgoCart")) || [];
 let isCartOpen = false;
 let selectedProductToCart = { id: null, talla: null, color: null };
-let carouselInterval = null; // Variable para el auto-rotado del carrusel
+let carouselInterval = null;
 
 // ==========================================
 // 4. ICONOS SVG (Rendimiento Seguro)
@@ -111,20 +111,16 @@ function initScrollFeatures() {
     const backToTop = document.getElementById("btn-back-to-top");
     const currentScrollY = window.scrollY;
 
-    // Lógica inteligente para ocultar/mostrar la barra de navegación en móviles
     if (window.innerWidth <= 768) {
-        if (currentScrollY > lastScrollY && currentScrollY > 60) {
-            // Scroll hacia abajo: ocultamos la barra
-            navbar.style.transform = "translateY(-100%)";
-        } else {
-            // Scroll hacia arriba: mostramos la barra
-            navbar.style.transform = "translateY(0)";
-        }
-    } else {
-        // En pantallas grandes nos aseguramos que siempre esté visible
+      if (currentScrollY > lastScrollY && currentScrollY > 60) {
+        navbar.style.transform = "translateY(-100%)";
+      } else {
         navbar.style.transform = "translateY(0)";
+      }
+    } else {
+      navbar.style.transform = "translateY(0)";
     }
-    
+
     lastScrollY = currentScrollY;
 
     if (currentScrollY > 10) {
@@ -240,7 +236,6 @@ function openInfoModal(type) {
     contentHTML = `<h2 class="text-3xl font-serif text-textMain mb-6 flex items-center gap-2"><span class="text-primary text-2xl">🕒</span> ${data.title}</h2><div class="flex flex-col">${daysHTML}</div><div class="mt-8 p-4 bg-bgLight rounded-2xl border border-borderColor text-center"><p class="text-sm text-primary font-bold italic">${data.note}</p></div>`;
   }
 
-  // Se modificaron las clases del botón "Cerrar Ventana" en la parte inferior de este template
   container.innerHTML = `
         <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeInfoModal()"></div>
@@ -288,7 +283,6 @@ function renderNavbar(data) {
   const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
   const themeIcon = currentTheme === "light" ? iconsSVG.moon : iconsSVG.sun;
 
-  // Ajustes de padding y bordes para que los enlaces se vean bien en modo flotante móvil
   const linksHTML = data.links
     .map(
       (link) =>
@@ -405,8 +399,40 @@ function renderCartUI() {
 }
 
 // ==========================================
-// 10. LÓGICA DEL CARRUSEL DE NOVEDADES
+// 10. LÓGICA DE LOS CARRUSELES (GENERAL Y MINI)
 // ==========================================
+
+// Función manual para cambiar imágenes individualmente en las tarjetas de producto (Con bucle infinito)
+window.slideCardImage = function (event, direction) {
+  event.stopPropagation();
+  const container = event.currentTarget.parentElement.parentElement;
+  const slider = container.querySelector(".snap-mandatory");
+  if (!slider) return;
+
+  const step = slider.clientWidth;
+  const maxScroll = slider.scrollWidth - step;
+  let currentScroll = slider.scrollLeft;
+
+  if (direction === 1) {
+    // Hacia la derecha (Siguiente)
+    if (currentScroll >= maxScroll - 10) {
+      // Si está en el final, regresa al principio
+      slider.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      slider.scrollBy({ left: step, behavior: "smooth" });
+    }
+  } else {
+    // Hacia la izquierda (Anterior)
+    if (currentScroll <= 10) {
+      // Si está en el principio, salta a la última imagen
+      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+    } else {
+      slider.scrollBy({ left: -step, behavior: "smooth" });
+    }
+  }
+};
+
+// Carrusel General de Novedades
 window.moveCarousel = function (direction) {
   const track = document.getElementById("slider-track");
   if (!track || track.dataset.animating === "true") return;
@@ -415,8 +441,7 @@ window.moveCarousel = function (direction) {
   const card = track.querySelector(".carousel-item");
   if (!card) return;
 
-  // 24px es el equivalente exacto a la clase 'gap-6' de Tailwind
-  const step = card.offsetWidth + 24; 
+  const step = card.offsetWidth + 24;
   const start = track.scrollLeft;
   const end = start + step * direction;
   const duration = 600;
@@ -425,7 +450,6 @@ window.moveCarousel = function (direction) {
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    // Efecto de suavizado (ease-out)
     const ease = 1 - Math.pow(1 - progress, 4);
 
     track.scrollLeft = start + (end - start) * ease;
@@ -433,7 +457,6 @@ window.moveCarousel = function (direction) {
     if (progress < 1) {
       requestAnimationFrame(animate);
     } else {
-      // Bucle infinito: si llegamos al borde, reiniciamos sigilosamente
       const totalOriginal = allProducts.filter((p) => p.destacado).length;
       if (track.scrollLeft < step * 0.5) {
         track.scrollLeft += step * totalOriginal;
@@ -455,15 +478,32 @@ function renderCarousel() {
     return;
   }
 
-  // Se agregaron las clases lg:w-[calc(33.333%-16px)] (3 tarjetas) y xl:w-[calc(25%-18px)] (4 tarjetas)
-  // Esto hace que la transición al encoger la ventana sea fluida y calcule matemáticamente los espacios.
   const cardsHTML = destacados
-    .map(
-      (item) => `
+    .map((item) => {
+      const imagenes =
+        item.imagenes && item.imagenes.length > 0
+          ? item.imagenes
+          : [item.referencia_imagen];
+      const hasMultiple = imagenes.length > 1;
+      return `
         <div onclick="openProductModal(${item.id})" class="carousel-item shrink-0 min-w-full w-full md:min-w-0 md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
-            <div class="relative h-80 overflow-hidden bg-cardBg">
-                <img src="${item.referencia_imagen}" alt="${item.nombre}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm flex items-center gap-1">
+            <div class="relative h-80 overflow-hidden bg-cardBg group/mini-slider">
+                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                    ${imagenes.map((img) => `<img src="${img}" alt="${item.nombre}" class="w-full h-full object-cover shrink-0 snap-center transition-transform duration-700">`).join("")}
+                </div>
+                ${
+                  hasMultiple
+                    ? `
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                    <button onclick="slideCardImage(event, -1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">◀</button>
+                </div>
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                    <button onclick="slideCardImage(event, 1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">▶</button>
+                </div>
+                `
+                    : ""
+                }
+                <div class="absolute top-3 right-3 z-10 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm flex items-center gap-1">
                     ✨ Nuevo
                 </div>
             </div>
@@ -477,8 +517,8 @@ function renderCarousel() {
                 </div>
             </div>
         </div>
-    `,
-    )
+        `;
+    })
     .join("");
 
   container.innerHTML = `
@@ -503,10 +543,9 @@ function renderCarousel() {
     const track = document.getElementById("slider-track");
     if (!track) return;
     const card = track.querySelector(".carousel-item");
-    const step = card.offsetWidth + 24; 
+    const step = card.offsetWidth + 24;
     const totalOriginal = destacados.length;
-    
-    // Posiciona el carrusel ocultando las tarjetas clonadas del inicio
+
     track.scrollLeft = step * totalOriginal;
 
     if (carouselInterval) clearInterval(carouselInterval);
@@ -514,19 +553,14 @@ function renderCarousel() {
       moveCarousel(1);
     }, 3000);
 
-    // NUEVO CÓDIGO: Evento que recalcula y reacomoda al redimensionar la ventana
-    window.addEventListener('resize', () => {
-        const currentCard = track.querySelector(".carousel-item");
-        if (!currentCard) return;
-        
-        // Recalculamos el ancho nuevo de la tarjeta
-        const newStep = currentCard.offsetWidth + 24;
-        
-        // Matemáticas para encontrar qué tarjeta se estaba viendo y forzar el scroll a esa posición exacta
-        const closestCardIndex = Math.round(track.scrollLeft / newStep);
-        track.scrollLeft = closestCardIndex * newStep;
-    });
+    window.addEventListener("resize", () => {
+      const currentCard = track.querySelector(".carousel-item");
+      if (!currentCard) return;
 
+      const newStep = currentCard.offsetWidth + 24;
+      const closestCardIndex = Math.round(track.scrollLeft / newStep);
+      track.scrollLeft = closestCardIndex * newStep;
+    });
   }, 300);
 }
 
@@ -646,12 +680,31 @@ function renderProductGrid() {
   const itemsToShow = filteredProducts.slice(0, visibleItems);
 
   grid.innerHTML = itemsToShow
-    .map(
-      (item) => `
+    .map((item) => {
+      const imagenes =
+        item.imagenes && item.imagenes.length > 0
+          ? item.imagenes
+          : [item.referencia_imagen];
+      const hasMultiple = imagenes.length > 1;
+      return `
         <div onclick="openProductModal(${item.id})" class="group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col animate-fade-in">
-            <div class="relative h-80 overflow-hidden bg-cardBg">
-                <img src="${item.referencia_imagen}" alt="${item.nombre}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                <div class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm">
+            <div class="relative h-80 overflow-hidden bg-cardBg group/mini-slider">
+                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                    ${imagenes.map((img) => `<img src="${img}" alt="${item.nombre}" class="w-full h-full object-cover shrink-0 snap-center transition-transform duration-700">`).join("")}
+                </div>
+                ${
+                  hasMultiple
+                    ? `
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                    <button onclick="slideCardImage(event, -1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">◀</button>
+                </div>
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                    <button onclick="slideCardImage(event, 1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">▶</button>
+                </div>
+                `
+                    : ""
+                }
+                <div class="absolute top-3 right-3 z-10 bg-white dark:bg-gray-800 text-textMain px-3 py-1 rounded-full text-xs font-bold border border-borderColor shadow-sm">
                     ${item.tallas.length} Tallas
                 </div>
             </div>
@@ -676,8 +729,8 @@ function renderProductGrid() {
                 </div>
             </div>
         </div>
-    `,
-    )
+        `;
+    })
     .join("");
 
   if (visibleItems < filteredProducts.length)
@@ -699,13 +752,33 @@ function openProductModal(id) {
   const container = document.getElementById("product-modal-container");
   document.body.style.overflow = "hidden";
 
+  const imagenes =
+    product.imagenes && product.imagenes.length > 0
+      ? product.imagenes
+      : [product.referencia_imagen];
+  const hasMultiple = imagenes.length > 1;
+
   container.innerHTML = `
         <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in">
             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
             <div class="relative bg-bgLight w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
                 <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-md hover:bg-primaryHover text-xl btn-press">×</button>
-                <div class="w-full md:w-1/2 h-64 md:h-auto bg-cardBg relative">
-                    <img src="${product.referencia_imagen}" class="w-full h-full object-cover">
+                <div class="w-full md:w-1/2 h-64 md:h-auto bg-cardBg relative group/mini-slider">
+                    <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                        ${imagenes.map((img) => `<img src="${img}" class="w-full h-full object-cover shrink-0 snap-center">`).join("")}
+                    </div>
+                    ${
+                      hasMultiple
+                        ? `
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                        <button onclick="slideCardImage(event, -1)" class="w-10 h-10 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight btn-press">◀</button>
+                    </div>
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
+                        <button onclick="slideCardImage(event, 1)" class="w-10 h-10 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight btn-press">▶</button>
+                    </div>
+                    `
+                        : ""
+                    }
                 </div>
                 <div class="w-full md:w-1/2 p-8 overflow-y-auto hide-scrollbar flex flex-col">
                     <p class="text-xs text-primary font-bold uppercase tracking-wider mb-2">${product.categoria}</p>
@@ -839,7 +912,7 @@ function applyThemeVariables(themeType) {
 
 function toggleTheme() {
   currentTheme = currentTheme === "light" ? "dark" : "light";
-  localStorage.setItem("virgoTheme", currentTheme); // Guarda el estado en la memoria del navegador
+  localStorage.setItem("virgoTheme", currentTheme);
   applyThemeVariables(currentTheme);
   renderNavbar(globalData.navbar);
 
@@ -880,52 +953,6 @@ function renderHero(data) {
                     <img src="${data.imageSrc}" alt="Colección" class="w-full h-[400px] md:h-[500px] object-cover rounded-2xl shadow-2xl">
                 </div>
             </div>
-        </div>
-    `;
-}
-
-function renderCategories(data) {
-  const container = document.getElementById("categories-container");
-  if (!container) return;
-
-  const orderMap = { Pantalones: 1, Playeras: 2, Blusas: 3, Suéteres: 4 };
-  const classMap = {
-    Pantalones: "md:col-span-2",
-    Playeras: "md:col-span-1",
-    Blusas: "md:col-span-1",
-    Suéteres: "md:col-span-2",
-  };
-
-  const sortedItems = [...data.items].sort(
-    (a, b) => orderMap[a.title] - orderMap[b.title],
-  );
-
-  const itemsHTML = sortedItems
-    .map((item) => {
-      const count = allProducts.filter(
-        (p) => p.categoria === item.title,
-      ).length;
-      const gridClass = classMap[item.title] || "md:col-span-1";
-      return `
-            <a href="catalogo.html?category=${encodeURIComponent(item.title)}" class="${gridClass} relative h-64 md:h-80 rounded-2xl overflow-hidden hover-zoom cursor-pointer shadow-md border border-borderColor block transition-all duration-300 btn-press">
-                <img src="${item.imageSrc}" alt="${item.title}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/10 transition-opacity"></div>
-                <div class="absolute bottom-6 left-6 bg-white dark:bg-gray-800 px-5 py-3 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col transition-colors duration-300">
-                    <span class="text-black dark:text-white font-bold text-xl leading-tight mb-0.5">${item.title}</span>
-                    <span class="text-primary font-bold text-sm">${count} prendas</span>
-                </div>
-            </a>
-        `;
-    })
-    .join("");
-
-  container.innerHTML = `
-        <div class="text-center mb-12 pt-8">
-            <h2 class="text-4xl font-serif text-textMain mb-4">${data.title}</h2>
-            <p class="text-textMuted max-w-2xl mx-auto">${data.subtitle}</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            ${itemsHTML}
         </div>
     `;
 }
