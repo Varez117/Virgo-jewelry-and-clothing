@@ -402,6 +402,19 @@ function renderCartUI() {
 // 10. LÓGICA DE LOS CARRUSELES (GENERAL Y MINI)
 // ==========================================
 
+// Función para actualizar el texto del indicador de imagen ("1/4", etc.)
+window.updateImageIndicator = function (slider, totalImages) {
+  if (!slider) return;
+  const step = slider.clientWidth;
+  if (step === 0) return;
+  const currentIndex = Math.round(slider.scrollLeft / step);
+  const container = slider.parentElement;
+  const indicator = container.querySelector(".image-indicator");
+  if (indicator) {
+    indicator.innerText = `${currentIndex + 1} / ${totalImages}`;
+  }
+};
+
 // Función manual para cambiar imágenes individualmente en las tarjetas de producto (Con bucle infinito)
 window.slideCardImage = function (event, direction) {
   event.stopPropagation();
@@ -488,7 +501,7 @@ function renderCarousel() {
       return `
         <div onclick="openProductModal(${item.id})" class="carousel-item shrink-0 min-w-full w-full md:min-w-0 md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
             <div class="relative h-80 overflow-hidden bg-cardBg group/mini-slider">
-                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;" onscroll="updateImageIndicator(this, ${imagenes.length})">
                     ${imagenes.map((img) => `<img src="${img}" alt="${item.nombre}" class="w-full h-full object-cover shrink-0 snap-center transition-transform duration-700">`).join("")}
                 </div>
                 ${
@@ -499,6 +512,9 @@ function renderCarousel() {
                 </div>
                 <div class="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
                     <button onclick="slideCardImage(event, 1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">▶</button>
+                </div>
+                <div class="image-indicator absolute bottom-3 right-3 z-10 bg-black/60 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm backdrop-blur-sm pointer-events-none">
+                    1 / ${imagenes.length}
                 </div>
                 `
                     : ""
@@ -689,7 +705,7 @@ function renderProductGrid() {
       return `
         <div onclick="openProductModal(${item.id})" class="group cursor-pointer bg-bgLight border border-borderColor rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col animate-fade-in">
             <div class="relative h-80 overflow-hidden bg-cardBg group/mini-slider">
-                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;" onscroll="updateImageIndicator(this, ${imagenes.length})">
                     ${imagenes.map((img) => `<img src="${img}" alt="${item.nombre}" class="w-full h-full object-cover shrink-0 snap-center transition-transform duration-700">`).join("")}
                 </div>
                 ${
@@ -700,6 +716,9 @@ function renderProductGrid() {
                 </div>
                 <div class="absolute right-2 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
                     <button onclick="slideCardImage(event, 1)" class="w-8 h-8 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-sm shadow-sm bg-bgLight btn-press">▶</button>
+                </div>
+                <div class="image-indicator absolute bottom-3 right-3 z-10 bg-black/60 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm backdrop-blur-sm pointer-events-none">
+                    1 / ${imagenes.length}
                 </div>
                 `
                     : ""
@@ -764,7 +783,7 @@ function openProductModal(id) {
             <div class="relative bg-bgLight w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
                 <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-md hover:bg-primaryHover text-xl btn-press">×</button>
                 <div class="w-full md:w-1/2 h-64 md:h-auto bg-cardBg relative group/mini-slider">
-                    <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;">
+                    <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar h-full w-full" style="scroll-behavior: smooth;" onscroll="updateImageIndicator(this, ${imagenes.length})">
                         ${imagenes.map((img) => `<img src="${img}" class="w-full h-full object-cover shrink-0 snap-center">`).join("")}
                     </div>
                     ${
@@ -775,6 +794,9 @@ function openProductModal(id) {
                     </div>
                     <div class="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover/mini-slider:opacity-100 transition-opacity">
                         <button onclick="slideCardImage(event, 1)" class="w-10 h-10 rounded-full border border-borderColor flex items-center justify-center text-textMain hover:bg-primary hover:text-white transition-colors text-xl shadow-sm bg-bgLight btn-press">▶</button>
+                    </div>
+                    <div class="image-indicator absolute bottom-4 right-4 z-10 bg-black/60 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-md backdrop-blur-sm pointer-events-none">
+                        1 / ${imagenes.length}
                     </div>
                     `
                         : ""
